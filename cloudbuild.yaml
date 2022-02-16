@@ -1,0 +1,53 @@
+steps:
+  - id: "build image"
+    name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "build",
+        "-t",
+        "gcr.io/${PROJECT_ID}/${_SERVICE_NAME}",
+        "-f",
+        "${_DOCKERFILE}",
+        ".",
+      ]
+
+  - id: "push image"
+    name: "gcr.io/cloud-builders/docker"
+    args: ["push", "gcr.io/${PROJECT_ID}/${_SERVICE_NAME}"]
+
+  - id: "deploy service"
+    name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+    entrypoint: "gcloud"
+    args:
+      [
+        "run",
+        "deploy",
+        "${_SERVICE_NAME}",
+        "--platform",
+        "managed",
+        "--region",
+        "${_DEPLOY_REGION}",
+        "--allow-unauthenticated",
+        "--image",
+        "gcr.io/${PROJECT_ID}/${_SERVICE_NAME}",
+      ]
+
+  # Force the new revision to serve 100% of traffic.
+  - id: "ensure service live"
+    name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+    entrypoint: "gcloud"
+    args:
+      [
+        "run",
+        "services",
+        "update-traffic",
+        "${_SERVICE_NAME}",
+        "--to-latest",
+        "--platform",
+        "managed",
+        "--region",
+        "${_DEPLOY_REGION}",
+      ]
+
+options:
+  machineType: "E2_HIGHCPU_32"
