@@ -1,0 +1,12 @@
+{
+  "hosting": {
+    "site": "high-bandwidth",
+    "rewrites": [{
+      "source": "**",
+      "run": {
+        "serviceId": "high-bandwidth-au",
+        "region": "australia-southeast1"
+      }
+    }]
+  }
+}
