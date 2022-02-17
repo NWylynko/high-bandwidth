@@ -13,7 +13,7 @@ function HomePage() {
         <Item done={true}>Add Cloud Build file</Item>
         <Item done={true}>Cloud Build</Item>
         <Item done={true}>Firebase Hosting Reverse Proxy</Item>
-        <Item done={false}>Add Caching Headers</Item>
+        <Item done={true}>Add Caching Headers</Item>
         <Item done={true}>Add Styled Components</Item>
         <Item done={false}>Add Sentry.io</Item>
         <Item done={false}>Add Firebase</Item>
