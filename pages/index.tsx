@@ -15,6 +15,7 @@ function HomePage() {
         <Item done={true}>Firebase Hosting Reverse Proxy</Item>
         <Item done={true}>Add Caching Headers</Item>
         <Item done={true}>Add Styled Components</Item>
+        <Item done={false}>Setup pre-prod deploys</Item>
         <Item done={false}>Setup E2E and Unit Testing</Item>
         <List>
           <Item done={false}>Add to CI/CD</Item>
@@ -30,7 +31,6 @@ function HomePage() {
           <Item done={false}>Add SEO for Home page</Item>
           <Item done={false}>Add SEO for Post pages</Item>
         </List>
-        <Item done={false}>Setup pre-prod deploys</Item>
         <Item done={false}>Create Home page</Item>
         <List>
           <Item done={false}>Design Home Page UI</Item>
@@ -45,6 +45,8 @@ function HomePage() {
           <Item done={false}>Create Post Page Component</Item>
         </List>
         <Item done={false}>Create Icon / Branding</Item>
+        <Item done={false}>Create 404 page</Item>
+        <Item done={false}>Create Error page</Item>
         <Item done={false}>Register domain and connect</Item>
         <Item done={false}>Comments</Item>
         <List>
