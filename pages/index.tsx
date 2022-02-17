@@ -49,8 +49,8 @@ function HomePage() {
         <Item done={false}>Comments</Item>
         <List>
           <Item done={false}>Plan out storage of Comments</Item>
-          <Item done={false}>Create Components API</Item>
-          <Item done={false}>Create Comments Component</Item>
+          <Item done={false}>Create Comments API</Item>
+          <Item done={false}>Create Comments List Component</Item>
           <Item done={false}>Create Comment Form Component</Item>
           <Item done={false}>Add Sign in with Google</Item>
         </List>
