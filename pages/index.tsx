@@ -15,6 +15,10 @@ function HomePage() {
         <Item done={true}>Firebase Hosting Reverse Proxy</Item>
         <Item done={true}>Add Caching Headers</Item>
         <Item done={true}>Add Styled Components</Item>
+        <Item done={false}>Setup E2E and Unit Testing</Item>
+        <List>
+          <Item done={false}>Add to CI/CD</Item>
+        </List>
         <Item done={false}>Add Sentry.io</Item>
         <Item done={false}>Add Firebase</Item>
         <Item done={false}>Add Firebase Anonymous Login</Item>
@@ -40,6 +44,7 @@ function HomePage() {
           <Item done={false}>Design Post Page UI</Item>
           <Item done={false}>Create Post Page Component</Item>
         </List>
+        <Item done={false}>Create Icon / Branding</Item>
         <Item done={false}>Register domain and connect</Item>
         <Item done={false}>Comments</Item>
         <List>
