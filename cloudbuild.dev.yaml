@@ -1,4 +1,4 @@
 steps:
   - id: "Test"
     name: "ubuntu"
-    args: ["echo", "${BRANCH}"]
+    args: ["echo", "${_BRANCH_NAME}"]
