@@ -23,7 +23,7 @@ function HomePage() {
           <Item done={true}>Add Unit Testing</Item>
           <Item done={true}>Add to Unit CI/CD</Item>
         </List>
-        <Item done={false}>Add Sentry.io</Item>
+        <Item done={true}>Add Sentry.io</Item>
         <Item done={false}>Add Firebase</Item>
         <Item done={false}>Add Firebase Anonymous Login</Item>
         <Item done={false}>Add Linting</Item>
