@@ -49,5 +49,9 @@ steps:
         "${_DEPLOY_REGION}",
       ]
 
+  - id: "Deploy to Firebase hosting"
+    name: gcr.io/${PROJECT_ID}/firebase
+    args: ["deploy", "--project=${PROJECT_ID}", "--only=hosting"]
+
 options:
   machineType: "E2_HIGHCPU_8"
