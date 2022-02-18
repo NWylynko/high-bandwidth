@@ -23,6 +23,9 @@ COPY . .
 # Uncomment the following line in case you want to disable telemetry during the build.
 ENV NEXT_TELEMETRY_DISABLED 1
 
+# set the sentry token so sentry knows when a new release is created
+ARG SENTRY_AUTH_TOKEN
+
 # run unit tests
 RUN npm run test
 

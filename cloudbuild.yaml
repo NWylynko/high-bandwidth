@@ -8,6 +8,8 @@ steps:
         "gcr.io/${PROJECT_ID}/${_SERVICE_NAME}:latest",
         "-f",
         "${_DOCKERFILE}",
+        "--build-arg",
+        "SENTRY_AUTH_TOKEN=${_SENTRY_AUTH_TOKEN}",
         ".",
       ]
 
