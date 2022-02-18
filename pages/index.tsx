@@ -21,7 +21,7 @@ function HomePage() {
           <Item done={false}>Add E2E Testing</Item>
           <Item done={false}>Add to E2E CI/CD</Item>
           <Item done={true}>Add Unit Testing</Item>
-          <Item done={false}>Add to Unit CI/CD</Item>
+          <Item done={true}>Add to Unit CI/CD</Item>
         </List>
         <Item done={false}>Add Sentry.io</Item>
         <Item done={false}>Add Firebase</Item>
