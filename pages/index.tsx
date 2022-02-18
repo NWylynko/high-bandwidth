@@ -15,7 +15,7 @@ function HomePage() {
         <Item done={true}>Firebase Hosting Reverse Proxy</Item>
         <Item done={true}>Add Caching Headers</Item>
         <Item done={true}>Add Styled Components</Item>
-        <Item done={false}>Setup pre-prod deploys</Item>
+        <Item done={true}>Setup pre-prod deploys</Item>
         <Item done={false}>Setup E2E and Unit Testing</Item>
         <List>
           <Item done={false}>Add to CI/CD</Item>
