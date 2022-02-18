@@ -1,4 +1,4 @@
 steps:
   - id: "Test"
     name: "ubuntu"
-    args: ["echo", "${_BRANCH_NAME}"]
+    args: ["echo", "Branch:", "${_BRANCH_NAME}", "Commit:", "${SHORT_SHA}"]
