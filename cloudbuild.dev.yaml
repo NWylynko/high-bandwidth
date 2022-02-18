@@ -1,4 +1,37 @@
 steps:
-  - id: "Test"
-    name: "ubuntu"
-    args: ["echo", "Branch:", "${BRANCH_NAME}", "Commit:", "${SHORT_SHA}"]
+  - id: "build image"
+    name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "build",
+        "-t",
+        "gcr.io/${PROJECT_ID}/${_SERVICE_NAME}:${BRANCH_NAME}",
+        "-f",
+        "${_DOCKERFILE}",
+        ".",
+      ]
+
+  - id: "push image"
+    name: "gcr.io/cloud-builders/docker"
+    args: ["push", "gcr.io/${PROJECT_ID}/${_SERVICE_NAME}:${BRANCH_NAME}"]
+
+  - id: "deploy service"
+    name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+    entrypoint: "gcloud"
+    args:
+      [
+        "run",
+        "deploy",
+        "${_SERVICE_NAME}",
+        "--platform",
+        "managed",
+        "--region",
+        "${_DEPLOY_REGION}",
+        "--image",
+        "gcr.io/${PROJECT_ID}/${_SERVICE_NAME}:${BRANCH_NAME}",
+        "--tag",
+        "branch-${BRANCH_NAME}",
+      ]
+
+options:
+  machineType: "E2_HIGHCPU_8"
