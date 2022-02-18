@@ -16,9 +16,12 @@ function HomePage() {
         <Item done={true}>Add Caching Headers</Item>
         <Item done={true}>Add Styled Components</Item>
         <Item done={true}>Setup pre-prod deploys</Item>
-        <Item done={false}>Setup E2E and Unit Testing</Item>
+        <Item done={false}>Setup Testing</Item>
         <List>
-          <Item done={false}>Add to CI/CD</Item>
+          <Item done={false}>Add E2E Testing</Item>
+          <Item done={false}>Add to E2E CI/CD</Item>
+          <Item done={true}>Add Unit Testing</Item>
+          <Item done={false}>Add to Unit CI/CD</Item>
         </List>
         <Item done={false}>Add Sentry.io</Item>
         <Item done={false}>Add Firebase</Item>
