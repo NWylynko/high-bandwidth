@@ -47,6 +47,8 @@ function HomePage() {
         <Item done={false}>Create Icon / Branding</Item>
         <Item done={false}>Create 404 page</Item>
         <Item done={false}>Create Error page</Item>
+        <Item done={false}>Create About me page</Item>
+        <Item done={false}>Update Dev Deploy to link back to github</Item>
         <Item done={false}>Register domain and connect</Item>
         <Item done={false}>Comments</Item>
         <List>
