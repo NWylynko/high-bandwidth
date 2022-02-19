@@ -5,75 +5,76 @@ function HomePage() {
     <>
       <Title>Website Roadmap</Title>
       <List>
-        <Item done={true}>Next.js</Item>
-        <Item done={true}>Add Typescript</Item>
-        <Item done={true}>Create Dockerfile</Item>
-        <Item done={true}>Next.js Standalone</Item>
-        <Item done={true}>Cloud Run</Item>
-        <Item done={true}>Add Cloud Build file</Item>
-        <Item done={true}>Cloud Build</Item>
-        <Item done={true}>Firebase Hosting Reverse Proxy</Item>
-        <Item done={true}>Add Caching Headers</Item>
-        <Item done={true}>Add Styled Components</Item>
-        <Item done={true}>Setup pre-prod deploys</Item>
-        <Item done={false}>Setup Testing</Item>
+        <Item status="done">Next.js</Item>
+        <Item status="done">Add Typescript</Item>
+        <Item status="done">Create Dockerfile</Item>
+        <Item status="done">Next.js Standalone</Item>
+        <Item status="done">Cloud Run</Item>
+        <Item status="done">Add Cloud Build file</Item>
+        <Item status="done">Cloud Build</Item>
+        <Item status="done">Firebase Hosting Reverse Proxy</Item>
+        <Item status="done">Add Caching Headers</Item>
+        <Item status="done">Add Styled Components</Item>
+        <Item status="done">Setup pre-prod deploys</Item>
+        <Item status="partial">Setup Testing</Item>
         <List>
-          <Item done={false}>Add E2E Testing</Item>
-          <Item done={false}>Add to E2E CI/CD</Item>
-          <Item done={true}>Add Unit Testing</Item>
-          <Item done={true}>Add to Unit CI/CD</Item>
+          <Item status="created">Add E2E Testing</Item>
+          <Item status="created">Add to E2E CI/CD</Item>
+          <Item status="done">Add Unit Testing</Item>
+          <Item status="done">Add to Unit CI/CD</Item>
         </List>
-        <Item done={true}>Add Sentry.io</Item>
-        <Item done={false}>Add Firebase</Item>
-        <Item done={false}>Add Firebase Anonymous Login</Item>
-        <Item done={false}>Add Linting</Item>
+        <Item status="done">Add Sentry.io</Item>
+        <Item status="created">Add Firebase</Item>
+        <Item status="created">Add Firebase Anonymous Login</Item>
+        <Item status="created">Add Linting</Item>
         <List>
-          <Item done={false}>Add to CI/CD</Item>
+          <Item status="created">Setup with `next lint`</Item>
+          <Item status="created">Add to CI/CD</Item>
         </List>
-        <Item done={false}>Read in Mark Down Files</Item>
-        <Item done={false}>Generate Pages from Mark Down Files</Item>
-        <Item done={false}>load and optimise images</Item>
-        <Item done={false}>Add SEO</Item>
+        <Item status="created">Read in Mark Down Files</Item>
+        <Item status="created">Generate Pages from Mark Down Files</Item>
+        <Item status="created">load and optimise images</Item>
+        <Item status="created">Add SEO</Item>
         <List>
-          <Item done={false}>Add SEO for Home page</Item>
-          <Item done={false}>Add SEO for Post pages</Item>
+          <Item status="created">Add SEO for Home page</Item>
+          <Item status="created">Add SEO for Post pages</Item>
         </List>
-        <Item done={false}>Create Home page</Item>
+        <Item status="created">Create Home page</Item>
         <List>
-          <Item done={false}>Design Home Page UI</Item>
-          <Item done={false}>Create Layout Component</Item>
-          <Item done={false}>Create Header Component</Item>
-          <Item done={false}>Create Footer Component</Item>
-          <Item done={false}>Generate list of latest posts</Item>
+          <Item status="created">Design Home Page UI</Item>
+          <Item status="created">Create Layout Component</Item>
+          <Item status="created">Create Header Component</Item>
+          <Item status="created">Create Footer Component</Item>
+          <Item status="created">Generate list of latest posts</Item>
         </List>
-        <Item done={false}>Create Post Page</Item>
+        <Item status="created">Create Post Page</Item>
         <List>
-          <Item done={false}>Design Post Page UI</Item>
-          <Item done={false}>Create Post Page Component</Item>
+          <Item status="created">Design Post Page UI</Item>
+          <Item status="created">Create Post Page Component</Item>
         </List>
-        <Item done={false}>Create Icon / Branding</Item>
-        <Item done={false}>Create 404 page</Item>
-        <Item done={false}>Create Error page</Item>
-        <Item done={false}>Create About me page</Item>
-        <Item done={false}>Update Dev Deploy to link back to github</Item>
-        <Item done={false}>Register domain and connect</Item>
-        <Item done={false}>Comments</Item>
+        <Item status="created">Create Icon / Branding</Item>
+        <Item status="created">Create 404 page</Item>
+        <Item status="created">Create Error page</Item>
+        <Item status="created">Create About me page</Item>
+        <Item status="created">Update Dev Deploy to link back to github</Item>
+        <Item status="created">Register domain and connect</Item>
+        <Item status="created">Comments</Item>
         <List>
-          <Item done={false}>Plan out storage of Comments</Item>
-          <Item done={false}>Create Comments API</Item>
-          <Item done={false}>Create Comments List Component</Item>
-          <Item done={false}>Create Comment Form Component</Item>
-          <Item done={false}>Add Sign in with Google</Item>
+          <Item status="created">Plan out storage of Comments</Item>
+          <Item status="created">Create Comments API</Item>
+          <Item status="created">Create Comments List Component</Item>
+          <Item status="created">Create Comment Form Component</Item>
+          <Item status="created">Add Sign in with Google</Item>
         </List>
-        <Item done={false}>Reactions</Item>
+        <Item status="created">Reactions</Item>
         <List>
-          <Item done={false}>Plan out storage of Reactions</Item>
-          <Item done={false}>Plan out UX of Reactions</Item>
-          <Item done={false}>Plan out UI of Reactions</Item>
-          <Item done={false}>Create Reactions Component</Item>
-          <Item done={false}>Store Reactions</Item>
+          <Item status="created">Plan out storage of Reactions</Item>
+          <Item status="created">Plan out UX of Reactions</Item>
+          <Item status="created">Plan out UI of Reactions</Item>
+          <Item status="created">Create Reactions Component</Item>
+          <Item status="created">Store Reactions</Item>
         </List>
-        <Item done={false}>Add History page</Item>
+        <Item status="created">Add History page</Item>
       </List>
     </>
   );
@@ -88,14 +89,36 @@ const Title = styled.h2`
 
 const List = styled.ul``;
 
-const Item = styled.li<{ done?: boolean }>`
+type Status = "created" | "partial" | "done";
+
+const statusColor = (status: Status) => {
+  const colors = {
+    created: "#811616",
+    partial: "#c98f39",
+    done: "#349727",
+  };
+
+  return colors[status];
+};
+
+const statusIcon = (status: Status) => {
+  const icons = {
+    created: '"[ ]"',
+    partial: '"[-]"',
+    done: '"[✔]"',
+  };
+
+  return icons[status];
+};
+
+const Item = styled.li<{ status: Status }>`
   color: ${({ theme }) => theme.colors.text};
   display: block;
   margin-bottom: 2px;
 
   &:before {
-    content: ${({ done }) => (done ? '"[✔]"' : '"[ ]"')};
-    color: ${({ done }) => (done ? "#349727" : "#811616")};
+    content: ${({ status }) => statusIcon(status)};
+    color: ${({ status }) => statusColor(status)};
     margin-right: 8px;
   }
 `;
