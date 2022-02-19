@@ -1,6 +1,5 @@
 import { createGlobalStyle, ThemeProvider } from "styled-components";
-import { initializeApp } from "firebase/app";
-import { firebaseConfig } from "../firebase/config";
+import { FirebaseProvider } from "@/firebase/provider";
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -18,16 +17,13 @@ const theme = {
 };
 
 export default function App({ Component, pageProps }) {
-  // Initialize Firebase, only if in browser
-  const app = process.browser ? initializeApp(firebaseConfig) : null;
-
-  console.log(app);
-
   return (
     <>
       <GlobalStyle />
       <ThemeProvider theme={theme}>
-        <Component {...pageProps} />
+        <FirebaseProvider>
+          <Component {...pageProps} />
+        </FirebaseProvider>
       </ThemeProvider>
     </>
   );
