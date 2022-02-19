@@ -21,9 +21,11 @@ interface FirebaseProviderProps {
 }
 
 export const FirebaseProvider = ({ children }: FirebaseProviderProps) => {
+  const inBrowser = typeof window !== "undefined";
+
   // Initialize Firebase, only if in browser
   const [firebase] = useState(
-    process.browser ? initializeApp(firebaseConfig) : undefined
+    inBrowser ? initializeApp(firebaseConfig) : undefined
   );
   const [firebaseAuth] = useState(firebase ? getAuth(firebase) : undefined);
   const [user, setUser] = useState<User | undefined>(undefined);
