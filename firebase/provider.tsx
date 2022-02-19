@@ -7,6 +7,7 @@ import {
   User,
 } from "firebase/auth";
 import { firebaseConfig } from "./config";
+import * as Sentry from "@sentry/browser";
 
 interface FirebaseContext {
   user?: User;
@@ -43,6 +44,12 @@ export const FirebaseProvider = ({ children }: FirebaseProviderProps) => {
   useEffect(() => console.log("firebase", firebase), [firebase]);
   useEffect(() => console.log("firebaseAuth", firebaseAuth), [firebaseAuth]);
   useEffect(() => console.log("user", user), [user]);
+
+  useEffect(() => {
+    if (user) {
+      Sentry.setUser({ id: user.uid });
+    }
+  }, [user]);
 
   return (
     <firebaseContext.Provider value={{ user }}>
