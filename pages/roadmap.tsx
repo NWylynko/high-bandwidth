@@ -31,8 +31,9 @@ function RoadmapPage() {
           <Item status="done">Setup with `next lint`</Item>
           <Item status="done">Add to CI/CD</Item>
         </List>
-        <Item status="created">Read in Mark Down Files</Item>
-        <Item status="created">Generate Pages from Mark Down Files</Item>
+        <Item status="done">Read in Mark Down Files</Item>
+        <Item status="done">Generate Pages from Mark Down Files</Item>
+        <Item status="created">Show Recent Blog Posts on home page</Item>
         <Item status="created">load and optimise images</Item>
         <Item status="created">Add SEO</Item>
         <List>
