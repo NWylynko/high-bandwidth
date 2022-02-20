@@ -129,14 +129,19 @@ exports[`renders roadmap unchanged 1`] = `
       </li>
     </ul>
     <li
-      class="sc-dkPtRN kpWQrx"
+      class="sc-dkPtRN bRdvsI"
     >
       Read in Mark Down Files
     </li>
     <li
-      class="sc-dkPtRN kpWQrx"
+      class="sc-dkPtRN bRdvsI"
     >
       Generate Pages from Mark Down Files
+    </li>
+    <li
+      class="sc-dkPtRN kpWQrx"
+    >
+      Show Recent Blog Posts on home page
     </li>
     <li
       class="sc-dkPtRN kpWQrx"
