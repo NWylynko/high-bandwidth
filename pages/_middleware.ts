@@ -10,7 +10,10 @@ export function middleware(req: NextRequest, ev: NextFetchEvent) {
   // only cache get requests
   if (method === "GET") {
     // we can cache for a year because by calling 'firebase deploy' it will de-validate the cache
-    response.headers.set("Cache-Control", "public, max-age=31536000");
+    response.headers.set(
+      "Cache-Control",
+      "public, max-age=300, s-maxage=31536000"
+    );
   }
 
   // Return response
