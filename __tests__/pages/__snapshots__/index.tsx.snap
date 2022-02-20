@@ -110,7 +110,7 @@ exports[`renders homepage unchanged 1`] = `
       Add Firebase Anonymous Login
     </li>
     <li
-      class="sc-dkPtRN kpWQrx"
+      class="sc-dkPtRN bRdvsI"
     >
       Add Linting
     </li>
@@ -118,12 +118,12 @@ exports[`renders homepage unchanged 1`] = `
       class="sc-gsDKAQ"
     >
       <li
-        class="sc-dkPtRN kpWQrx"
+        class="sc-dkPtRN bRdvsI"
       >
         Setup with \`next lint\`
       </li>
       <li
-        class="sc-dkPtRN kpWQrx"
+        class="sc-dkPtRN bRdvsI"
       >
         Add to CI/CD
       </li>
