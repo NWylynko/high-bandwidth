@@ -1,4 +1,5 @@
 import { createGlobalStyle, ThemeProvider } from "styled-components";
+import { FirebaseProvider } from "@/firebase/provider";
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -20,7 +21,9 @@ export default function App({ Component, pageProps }) {
     <>
       <GlobalStyle />
       <ThemeProvider theme={theme}>
-        <Component {...pageProps} />
+        <FirebaseProvider>
+          <Component {...pageProps} />
+        </FirebaseProvider>
       </ThemeProvider>
     </>
   );

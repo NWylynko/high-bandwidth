@@ -24,8 +24,8 @@ function HomePage() {
           <Item status="done">Add to Unit CI/CD</Item>
         </List>
         <Item status="done">Add Sentry.io</Item>
-        <Item status="created">Add Firebase</Item>
-        <Item status="created">Add Firebase Anonymous Login</Item>
+        <Item status="done">Add Firebase</Item>
+        <Item status="done">Add Firebase Anonymous Login</Item>
         <Item status="created">Add Linting</Item>
         <List>
           <Item status="created">Setup with `next lint`</Item>

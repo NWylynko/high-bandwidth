@@ -100,12 +100,12 @@ exports[`renders homepage unchanged 1`] = `
       Add Sentry.io
     </li>
     <li
-      class="sc-dkPtRN kpWQrx"
+      class="sc-dkPtRN bRdvsI"
     >
       Add Firebase
     </li>
     <li
-      class="sc-dkPtRN kpWQrx"
+      class="sc-dkPtRN bRdvsI"
     >
       Add Firebase Anonymous Login
     </li>
