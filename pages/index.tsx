@@ -26,10 +26,10 @@ function HomePage() {
         <Item status="done">Add Sentry.io</Item>
         <Item status="done">Add Firebase</Item>
         <Item status="done">Add Firebase Anonymous Login</Item>
-        <Item status="created">Add Linting</Item>
+        <Item status="done">Add Linting</Item>
         <List>
-          <Item status="created">Setup with `next lint`</Item>
-          <Item status="created">Add to CI/CD</Item>
+          <Item status="done">Setup with `next lint`</Item>
+          <Item status="done">Add to CI/CD</Item>
         </List>
         <Item status="created">Read in Mark Down Files</Item>
         <Item status="created">Generate Pages from Mark Down Files</Item>

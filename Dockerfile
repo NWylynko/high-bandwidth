@@ -26,6 +26,9 @@ ENV NEXT_TELEMETRY_DISABLED 1
 # set the sentry token so sentry knows when a new release is created
 ARG SENTRY_AUTH_TOKEN
 
+# run linter
+RUN npm run lint
+
 # run unit tests
 RUN npm run test
 
