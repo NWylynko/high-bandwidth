@@ -1,8 +1,6 @@
 import fs from "fs/promises";
 import path from "path";
-import matter, { GrayMatterFile } from "gray-matter";
-import { remark } from "remark";
-import html from "remark-html";
+import { serialize } from "next-mdx-remote/serialize";
 
 const POSTS = path.join(process.cwd(), "posts");
 
@@ -18,31 +16,30 @@ export const getAllBlogPosts = async () => {
   return paths;
 };
 
-export type Matter = GrayMatterFile<string> & { isEmpty: boolean };
-
 export const getBlogPostBySlug = async (slug: string) => {
-  const filePath = path.join(POSTS, slug, "index.md");
+  const fileDir = path.join(POSTS, slug);
+  const filePath = path.join(fileDir, "index.mdx");
 
-  const file = await fs.readFile(filePath, "utf8");
+  const blogFile = await fs.readFile(filePath, "utf8");
 
-  const matterResult = matter(file) as Matter;
+  const source = await serialize(blogFile, { parseFrontmatter: true });
 
-  if (matterResult?.data?.title === undefined) {
+  const data = source.frontmatter;
+
+  if (data?.title === undefined) {
     throw new Error(`No title found in ${filePath}`);
   }
 
-  if (matterResult?.data?.date === undefined) {
+  if (data?.date === undefined) {
     throw new Error(`No date found in ${filePath}`);
   }
 
-  if (matterResult?.data?.image === undefined) {
+  if (data?.image === undefined) {
     throw new Error(`No image found in ${filePath}`);
   }
 
-  return matterResult;
-};
+  const directory = fileDir;
+  // .replace(process.cwd(), "");
 
-export default async function markdownToHtml(markdown) {
-  const result = await remark().use(html).process(markdown);
-  return result.toString();
-}
+  return { source, data, directory };
+};
