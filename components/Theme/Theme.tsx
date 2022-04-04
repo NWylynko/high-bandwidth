@@ -1,6 +1,4 @@
 import { createGlobalStyle, ThemeProvider } from "styled-components";
-import { FirebaseProvider } from "@/firebase/provider";
-import { Theme } from "@/components/Theme";
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -17,14 +15,15 @@ const theme = {
   },
 };
 
-export default function App({ Component, pageProps }) {
+interface ThemeProps {
+  children: React.ReactNode;
+}
+
+export const Theme = ({ children }: ThemeProps) => {
   return (
     <>
-      <Theme>
-        <FirebaseProvider>
-          <Component {...pageProps} />
-        </FirebaseProvider>
-      </Theme>
+      <GlobalStyle />
+      <ThemeProvider theme={theme}>{children}</ThemeProvider>
     </>
   );
-}
+};
