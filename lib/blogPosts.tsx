@@ -38,8 +38,9 @@ export const getBlogPostBySlug = async (slug: string) => {
     throw new Error(`No image found in ${filePath}`);
   }
 
-  const directory = fileDir;
+  const directory = path.join("./posts", slug);
+
   // .replace(process.cwd(), "");
 
-  return { source, data, directory };
+  return { slug, source, data, directory };
 };
