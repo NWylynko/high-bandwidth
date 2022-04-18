@@ -1,20 +1,293 @@
 ---
-title: "Build A burger API for free in a hour (or three)"
+title: "Build & Deploy A burger API for free"
 date: "16-03-2020"
 image: "./cover.jpeg"
 ---
 
-### Step 1 - Create the Repo
+Today we will be building an api, and deploying it as a live publicly accessible service, this beginner guide walks you through all the steps to setup and build a json rest api, ready to be consumed by another service or a frontend.
 
-To get started we need a repository, this is a place that stores all the code we write. It has built in version control so we can look back and see the changes that have been made.
+A lot of the steps (especially at the start) can be skipped if you have already set it up or already know how to do it. I have attempted to modularised this as much as possible so skipping steps you don't need shouldn't affect you, but potentially you will need to read over things you skipped just to get context.
 
-2. Create your package.json
-3. Type Checking
+## Step 1 - Using Git
+
+To get started we need a repository, this is a place that stores all the code we write. It has built in version control so we can look back and see the changes that have been made. While learning `git` can be a hurdle, it is used in every software development job under the sun, but gives you a really nice place to store your code. Plus it uses `the cloud`, and thats got to be worth something. Personally I use `Github`, while there are a different websites that provide `git` as a service, `Github` is the most well known, and gives you pretty much all the features for free.
+
+### Setup Github
+
+First you will need a Github account, [go here](https://github.com/join) to create one. Next you'll need to sign in to your account on your computer, I highly recommend the `Github Cli`, its relatively new and makes signing in to git very easy. [Check out here how to install it](https://github.com/cli/cli#installation). Once its installed, follow the steps below to [sign in](https://cli.github.com/manual/gh_auth_login).
+
+Open up a new Terminal, for now it doesn't matter what directory its in.
+
+```bash
+gh auth login
+```
+
+This will start a process that will get you signed in to your Github account.
+
+```bash
+? What account do you want to log into?  [Use arrows to move, type to filter]
+> GitHub.com
+  GitHub Enterprise Server
+```
+
+Select enter on `Github.com` as we are __not__ using an `Enterprise Server`
+
+```bash
+? What is your preferred protocol for Git operations?  [Use arrows to move, type to filter]
+  HTTPS
+> SSH
+```
+
+I suggest using `SSH`, you will have a better developer experience, but if you have problems, maybe try `HTTPS`.
+
+```bash
+? Generate a new SSH key to add to your GitHub account? (Y/n) 
+```
+
+Just click the `Y` key to continue, you will need an SSH Key to authenticate with Github's servers.
+
+```bash
+? Enter a passphrase for your new SSH key (Optional) 
+```
+
+You can set a pin / passcode to enter whenever you are interacting with Github, this is useful if your computer doesn't have a password, or if you share your password with anyone else. Personally I don't use one, so just press Enter to continue.
+
+```bash
+? How would you like to authenticate GitHub CLI?  [Use arrows to move, type to filter]
+> Login with a web browser
+  Paste an authentication token
+```
+
+Select `Login with a web browser`, it will give you a short, code and open up your web browser, paste the code in the browser and click `Authorize github` to give the cli permission to perform actions on your behalf (eg clone your repo). If you have problems with using your web browser, you will need to use `Paste an authentication token`, you can look in to [creating a token here](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)
+
+```bash
+✓ Authentication complete.
+...
+```
+
+Your should get a success message and some other details, you're now signed in, great job.
+
+To tell `git` who you are, run the following, replacing the name and email with your name and email. Make sure to use the email you used to sign up to Github.
+```bash
+git config --global user.name "Mona Lisa"
+```
+
+```bash
+git config --global user.email "Mona@Lisa.com"
+```
+
+Amazing work, you now have Git and Github setup on your machine, you will use this for every project, so getting it setup, and setup well will make your developer experience much nicer.
+
+### Create a new Repo
+
+Time to create that repo, I am going to call it `burger-api` but you can be creative as you would like. Github made the shortcut [https://repo.new](https://repo.new) as a fun little short-cut to get to the create new repository page. Lets walk through the options.
+
+**Repository name:** Like Github suggests, use something short, it doesn't have to be but will make life easier. for this I am using `burger-api`. Don't over think it, you can always change it later.
+
+**Description:** Trust me, you will want to fill this out, when you look at this repo in six months or a year, a short sentence describing it is great.
+
+**Visibility:** here you select if the repo is `Public` or `Private`, I prefer to make things Public unless what I am creating is being used commercially. For this project, I will select `Public`
+
+**Add a README file:** This file is a very simple form of documentation, Its essentially a text file that you can write anything in to help your or anyone your working with. Put anything in here let tells people how to 1. setup the project, 2. run the project, 3. deploy the project. The more documentation the better (unless its misleading / out-dated). I highly recommend ticking the box.
+
+**Add .gitignore:** This file is extremely important, it tells git to not include certain files and folders from the repo, for example `node_modules` a folder of dependencies, this folder can easily grow to half a gig or multiple gigabytes. And you have your `package.json` and `package-lock.json` files with the purpose of downloading the dependencies you need for your project to function. You need to select a `template` anything using `Javascript` or `Typescript`, you will want to select `Node`, even for frontend projects.
+
+**Choose a license:** By default this is `None` this is fine, but if you leave it like that, your code is not `Open Source` despite the repo being Public as you maintain copy write of your code. For things like this, that is completely fine, but if you want others to work on your code, experienced `Open Source` developers won't touch a project unless it has a license. I am no lawyer, but my understanding is the `MIT` license is good, its what I use.
+
+And that is it, click `Create repository` and wait for the page to redirect.
+
+### 'Clone' your new repo to your computer
+
+Now that we have made, we need to download it to our computer, in `git` terms this is called `cloning`.
+
+on the github page you have been redirected too, you will see a green button with the text `Code`, clicking on it will bring up a menu. Click on `Github CLI` as we set that up before, this will give you a command.
+
+```bash
+gh repo clone NWylynko/burger-api
+```
+
+Yours will be different is it will have your github username, and the name will be whatever you set when creating your repo.
+
+Open up the terminal from before, but before you run this command, you will need to consider where you want to run it. Running this command will create a folder on your computer. I recommend creating a folder called `dev` and cloning the project in to there.
+
+```bash
+mkdir dev
+cd dev
+```
+
+- Calling `mkdir` creates a new folder, with the name of whatever you pass as the first argument, in this case `dev`.
+- `cd` is short for `change directory` and whatever you pass as the first argument, the terminal will try to change its currently active directory too.
+
+So time to clone are new fancy repo, inside the dev folder, run the command github gave you before.
+
+```bash
+gh repo clone NWylynko/burger-api
+```
+
+```bash
+This key is not known by any other names
+Are you sure you want to continue connecting (yes/no/[fingerprint])?   
+```
+
+If asked this, enter `yes` telling your computer to trust Github's servers
+
+```bash
+remote: Enumerating objects: 5, done.
+remote: Counting objects: 100% (5/5), done.
+remote: Compressing objects: 100% (5/5), done.
+remote: Total 5 (delta 0), reused 0 (delta 0), pack-reused 0
+Receiving objects: 100% (5/5), done.
+```
+
+This tells us that the repo was successfully cloned, pulling the files in the repo in to the folder it created.
+
+```bash
+ls
+```
+
+Running `ls` will list all the files and folders in your `dev` folder.
+
+```bash
+cd burger-api
+```
+
+Like how we `cd` in to the dev folder above, running this will change the active directory in your terminal.
+
+Your repo includes the files and folders that make up your project. Anything needed to run the project needs to be included in files or folders inside this folder so it gets saved to Github. This allows you to share your project with other people who can then run it on there machine without having to grab files off your computer.
+
+Open the folder in your IDE of choice, if you use VSCode, you should be able to just run
+```bash
+code .
+```
+to open the folder.
+
+## Step 2 - Installing Node.js
+
+Setting up Node.js (and npm) can be done a bunch of ways, but my recommendation is to use [NVM](https://github.com/nvm-sh/nvm). Once setup, you can quickly (and automatically) switch between any node version ever released, allowing you to use the exact same version as your team mates and in production.
+
+Please visit [the installation guide here](https://github.com/nvm-sh/nvm#installing-and-updating) to get it setup for your terminal.
+
+Once setup, you have access to a couple essential commands in the terminal
+
+```bash
+nvm install 16
+```
+
+This will install the latest version of Node 16
+
+```bash
+nvm use 16
+```
+
+This will set Node 16 (the latest version you have installed) as the currently active node version.
+
+```bash
+node -v
+npm -v
+```
+
+Will tell you which version of node & npm your using.
+
+## Step 3 - Create your package.json
+
+The package.json is one of the most important files in any javascript project, personally it is one of the first places I look when looking at a new project. It contains the name and version of the application, but importantly it holds the versions of the dependencies, great for quickly figuring out what a project does. For example if [React](https://www.npmjs.com/package/react) is install, there is a good chance this is a website, if [MongoDB](https://www.npmjs.com/package/mongodb) is installed, there is a good chance it interacts with a database.
+
+To get started, in the open up a terminal window and `cd` to the repository we cloned earlier, we can run the following command to create a new package.json file.
+
+```bash
+npm init -y
+```
+
+To break it down, we are essentially doing three things here. First we are running the `npm` binary, a command line interface that allows you to interact with [NPM](https://www.npmjs.com/). `init` is a "argument", essentially commanding npm to create a new package.json for us, we could create it by hand but using init ensures its done correctly. Lastly using `-y`, known as a flag it modifies how `init` runs, instead of walking us through a process, asking us the project name and other details, we just skip that and speed up this step. If you would like to manually configure any part, I would recommend just doing it manually after, but you can just run `npm init` and go through the process.
+
+Once this is done, you will find a `package.json` in your new repo. Take a look around, it will have some details included the project.
+
+```json
+{
+  "name": "burger-api",
+  "version": "1.0.0",
+  "description": "A simple api that provides a list of burgers",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NWylynko/burger-api.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NWylynko/burger-api/issues"
+  },
+  "homepage": "https://github.com/NWylynko/burger-api#readme"
+}
+```
+
+Something that can cause confusing but makes sense, is that NPM is used to both install packages, and as a tool for uploading packages to be consumed by other projects. This makes sense but has some side effects. For example the keywords array seen above, for a module it makes sense, it means users can search for it on [npmjs.com](https://www.npmjs.com) by tag. But for what we are making, a product / service, it makes very little sense to bother using it. You can see this throughout the [package.json](https://docs.npmjs.com/cli/v8/configuring-npm/package-json), it serves both modules and consumers of those modules.
+
+This isn't necessarily a problem and I'm betting that most if not all other package managers work the same way, but the dual functionality can be confusing. Another example is the "private" field, setting this to true will ensure that running `npm publish` will never publish the package publicly. But for what we are building, we would never run `npm publish`.
+
+[**Name:**](https://docs.npmjs.com/cli/v8/configuring-npm/package-json#name) The name of the project, auto-filled from the folder name I believe, could be from the git repo name, not sure.
+
+[**Version:**](https://docs.npmjs.com/cli/v8/configuring-npm/package-json#version) NPM uses [SEMVER](https://semver.org/), I really like this way of versioning and strictly sticking too it will reduce headaches. Its a simple concept and following it closely is definitely worth it. I Recommend using [bumpp](https://www.npmjs.com/package/bumpp) to make versioning easy, quick and painless. Personally I am going to set the current version to `0.0.0` as its not even at its first release.
+
+[**Description:**](https://docs.npmjs.com/cli/v8/configuring-npm/package-json#description-1) Read from the README.md, this is just a duplication of the description, not really important for what we are building, but if you are publishing a package, this is nice to give context.
+
+[**Main:**](https://docs.npmjs.com/cli/v8/configuring-npm/package-json#main) The "entrypoint" to your application, this is the first file that is run, typically called index, it needs to import all your other code and fire off your starting execution (eg listening on a port for in-coming http requests).
+
+[**Scripts:**](https://docs.npmjs.com/cli/v8/configuring-npm/package-json#scripts) One of my favourite features of the package.json, you can place any command in here and then just run it with `npm run **`. This can make collaboration with other developers so easy and painless, Dev A doesn't need to know how Dev B has built the build system, Dev A just runs `npm run build` and boom its all done for them. Or a very long but powerful command that generates fake users for testing could just sit behind `npm run generate`. Your imagination is your limitation.
+
+**[Repository](https://docs.npmjs.com/cli/v8/configuring-npm/package-json#repository) / [Bugs](https://docs.npmjs.com/cli/v8/configuring-npm/package-json#bugs) / [Homepage](https://docs.npmjs.com/cli/v8/configuring-npm/package-json#homepage):** Somewhat redundant with our current project, but potentially useful, feel free to get rid of them if you like to keep things clean and tidy.
+
+[**Keywords:**](https://docs.npmjs.com/cli/v8/configuring-npm/package-json#keywords) Great if you're building a package, useless for us, I am going to remove it.
+
+[**Author:**](https://docs.npmjs.com/cli/v8/configuring-npm/package-json#people-fields-author-contributors) Give yourself the credit you deserve, even for projects at work, its a quick way to know who has worked on something 6 months or 3 years ago. I am going to convert it to the object form.
+
+[**License:**](https://docs.npmjs.com/cli/v8/configuring-npm/package-json#license) Oddly enough this doesn't pick up the license in the `LICENSE` file, and has defaulted to `ISC`, I will update it to MIT to be in-line with the one we picked when creating our repo.
+
+My updated package.json looks like this, yours should look similar.
+```json
+{
+  "name": "burger-api",
+  "version": "0.0.0",
+  "description": "A simple api that provides a list of burgers",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NWylynko/burger-api.git"
+  },
+  "author": {
+    "name": "Nick Wylynko",
+    "email": "nick@wylynko.com",
+    "url": "https://nick.wylynko.com/"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/NWylynko/burger-api/issues"
+  },
+  "homepage": "https://github.com/NWylynko/burger-api#readme"
+}
+```
+
+Feel free to commit this file as your first commit. A commit is making a change to your repo, you need to give a message telling git what change you have made, in this case I would write "Added package.json file". If you want to use your terminal look in to [creating a commit in the terminal](https://github.com/git-guides/git-commit), or if you are using an IDE like vscode [Look in to how to commit using the built in version control.](https://code.visualstudio.com/docs/editor/versioncontrol#_commit)
+
+## Step 5 - Locking your Node and NPM version
+
+## Step 4 - Type Checking
   - Install Typescript & @types/node
   - Install @tsconfig/node16
   - Create tsconfig.json
-4. Bug And Error Tracking
+
+## Step 5 - Creating a Dockerfile
+
+## Step 6 -  Bug And Error Tracking
   - Add Sentry
-5. Communication Layer
+
+## Step 7 - Communication Layer
   - Fastify
-6. 
+  - Fastify-cors
