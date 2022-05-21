@@ -1,0 +1,86 @@
+# Attempting to speed up cold starts in Node
+
+With the shift to serverless deployments, start up time of services has become a very important part of building a scalable system that can meet demand at any scale. In this post I will be attempting to minimise the time to first response from a simple microservice written in Typescript running on Node. The start up time and shutdown time of older systems was not much of a concern, taking a minute to get running didn't really matter when the service was supposed to stay up for the next 6 years. One issue with the mentality is what happens in the case of a crash, another instance being able to start up quickly means very little customer down time while one that takes minutes means users are waiting ages for the app to start working again.
+
+For this experiment I will be using GCP Cloud Build and GCP Cloud Run. In this case they really being used interchangeable with any other service that runs docker images and scales on demand. While yes the serverless provider you use will probably have a large impact on the first response time, the providers overhead is not something we can control. What we can control is the container image we give them.
+
+The three stages that any serverless platform is going to go through on a cold start follows:
+1. Download the container image from somewhere
+2. Load up the image from I/O in to memory
+3. Run the code and handle the endpoint requested.
+I will be focusing on steps one and two, I might do a second post about optimising step 3. What this means is minimising the container size and the amount of files that need to be imported / loaded in to memory before Node can get to handling the request.
+
+To attempt to optimise these I running tests on these setups:
+- Nothing, just a normal setup with Typescript and the usual tools (the baseline)
+- Removing dependencies not needed at run time
+- Using Typescript `outFile` to build in to a single file
+- Using `ncc` to build the source code and the node_modules in to minimal files
+- Using `pkg` to build everything in to a linux binary
+
+These should cover all the ways we could optimise the speed of first response (if any of them actually make a difference).
+
+I will use the same source-code for all of them to remove it as a variable, a simple Fastify api that has a single endpoint that returns { "hello": "world" }. You might say I should have it connect to a database or some kind of data-source of some kind. Well your right that would be more accurate to a real micro-service, its not what I am testing here. Like I said before I might make another post about optimising that area of startup, it is outside the scope of this experiment.
+
+I will start with my [Node base template repo](https://github.com/NWylynko/base-node), note it may have changed since I write this. [Here is the repo for this project](https://github.com/NWylynko/the-death-of-the-cold-start) The `main` branch will include the source code that all of the setups will be using, other than that it'll be 'bone stock'. I will then create branches for the other four setups to attempt to build the best docker image.
+
+## Baseline
+[the-death-of-the-cold-start/tree/main](https://github.com/NWylynko/the-death-of-the-cold-start/tree/main)
+
+This is what I would consider the bare minimum for a decent Nodejs service, nothing out of the ordinary. It uses Fastify to create a rest api and listens on port 4000 by default. The Dockerfile is optimised in size in using the alpine version of node as the base, this alone reduced the docker image base size by almost nine times. I don't include both the normal and alpine versions for comparison as any guide out there will tell you to do this.
+
+### A small discovery
+For local testing of speed I utilise the `time` command that seems to be included by default in linux and macos. It's fairly simple, tells you how long it took for a command to run. So I wanted to time how long it took to start up the app locally, start listening on a port and handle a single request. To do this I created a new branch called [fetch-and-kill](https://github.com/NWylynko/the-death-of-the-cold-start/tree/fetch-and-kill) installed `axios` and wrote a simple function called `fetchAndKill`. After awaiting for app.listen to resolve, it can be run on the endpoint and once it has resolved it kills the service. This means that by starting the service, it then tests itself and then stops the service. kind of like the [Useless Machine](https://en.wikipedia.org/wiki/Useless_machine).
+While messing around with it I made a discovery. Package.json scripts are not 'free', when using them there is overhead. Now this could be a `WSL` thing which would make sense but I thought it was worth discussing because its very easy to work around.
+So to run a node service, the most standard way is to use `npm run start` or `yarn start`, I had thought these had very little or no overhead in how long it took to run the script underneath. But to my discovery, they have a massive impact.
+- `time yarn start`: averages 800ms
+- `time npm run start`: averages 450ms
+- `time node dist`: averages 200ms
+Now I am trying to cut down the start up time as much as possible, so I will be swapping out `CMD ["yarn", "start"]` for `CMD ["node", "dist"]` as I do not have the patients to wait for yarn to start up. Now the interesting thing is, in practice this doesn't seem to matter, swapping out the CMD and re-building the docker image, it seemed to only effect `docker run` by around 50ms, but it can't hurt so I will keep it as `node dist` for now.
+
+### Stats
+container size: 260MB (base image: 112MB)
+
+## Removing Dev Dependencies after Build
+[the-death-of-the-cold-start/tree/remove-dev-dependencies](https://github.com/NWylynko/the-death-of-the-cold-start/tree/remove-dev-dependencies)
+
+The goal here is simple, package.json normally store two different types of dependencies, standard and dev. We need the dev ones for multiple reasons, for linting the code, running tests and even building the code. But once it is built we shouldn't need any of the dev dependencies. So a simple quick step to optimising the size is removing all the dev dependencies after building, so the docker image only has the dependencies needed at run time.
+
+For NPM:
+
+  1. run `NPM ci` to install all the dependencies and build the project
+  2. run `NPM install --production` to remove all the none-production dependencies
+
+For Yarn (v1):
+
+  1. run `yarn` to install dependencies and build the project
+  2. Remove the `node_modules` 
+  3. run `yarn install --production=true` to install only needed dependencies
+As you can see here we are deleting node_modules so they have to be re-downloaded which is unnecessary, maybe they are cached locally so wouldn't be an issue but v2/3 of yarn has a fix for this.
+
+For Yarn (v2/3):
+
+  - run `yarn plugin import workspace-tools` to install workspace-tools
+  1. run `yarn` to install dependencies and build the project
+  2. run `yarn workspaces focus --production` to remove all the none-production dependencies
+
+In this branch I am using the yarn v3 steps. Then added another step to the dockerfile that makes sure only the production dependencies are in the final docker image.
+
+```Dockerfile
+FROM node:16.15.0-alpine as Prod-Deps
+
+WORKDIR /app
+
+COPY --from=Builder /app .
+
+# this removes all the dev dependencies, only keeping the ones needed at run time
+RUN yarn workspaces focus --production
+```
+
+This alone cut down the `node_modules` folder down by 1/10th in this project.
+
+### Stats
+container size: 119MB (base image: 112MB)
+
+Instantly cut the container image in half, there is no doubt it will load faster. Only keeps whats necessary. The one thing is to keep a keen eye on what in dependencies and devDependencies in your package.json. Anything your importing in to your source code goes in dependencies and pretty much everything else is a devDependencies. Any package your not using any more you'll need to remove from dependencies. This can be difficult to do to an existing project as sometimes people install a package as a devDependencies only to import it, meaning this will break, so be careful.
+
+## Using Typescript to build a single javascript file
